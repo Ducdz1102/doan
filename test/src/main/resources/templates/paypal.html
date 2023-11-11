@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thanh toán PayPal</title>
+</head>
+<body>
+    <h1>Chi tiết đơn hàng</h1>
+    <p>Mô tả: Thanh toán sản phẩm XYZ</p>
+    <p>Số tiền: $50.0</p>
+
+    <form th:action="@{/process-payment}" method="post">
+        <input type="hidden" name="amount" value="50" />
+        <input type="hidden" name="currency" value="USD" />
+        <input type="hidden" name="description" value="Thanh toán sản phẩm XYZ" />
+        <input type="hidden" name="intent" value="sale" />
+        <input type="hidden" name="methodpayment" value="online" />
+        <input type="hidden" name="cancelUrl" th:value="@{/cancel}" />
+        <input type="hidden" name="successUrl" th:value="@{/success}" />
+
+        <button type="submit">Thanh toán qua PayPal</button>
+    </form>
+</body>
+</html>

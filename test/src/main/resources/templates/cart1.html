@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Giỏ hàng</title>
+        <link th:href="@{css/styles.css}" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#!">Start Bootstrap</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+
+                    </ul>
+                    <div class="d-flex">
+                        <div class="btn nav-item me-1" th:unless="${#httpServletRequest.userPrincipal != null}">
+                            <a th:href="@{/login}">Đăng nhập</a>
+                        </div>
+                        <div class="btn nav-item me-1" th:if="${#httpServletRequest.userPrincipal != null}">
+                            Chào mừng <span th:text="${#httpServletRequest.userPrincipal.name}"></span>!
+                            <a th:href="@{/logout}">Đăng xuất</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="bg-dark py-5" style="background-image: url('/css/12.jpg')">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Shop in style</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Welcome!!!</p>
+                </div>              
+            </div>
+
+        </header>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <p class="navbar-brand" ></p>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/home1}">Home</a></li>
+                        <li class="nav-item">
+                            <form id="searchForm" class="nav-link" th:action="@{/home1}" method="get">
+                                <input type="text" name="keyword" placeholder="Tìm kiếm theo tên...">
+                                <select name="category">
+                                    <option value="">Tất cả danh mục</option>
+                                    <option th:each="category : ${category}" th:value="${category.cid}" th:text="${category.cname}"
+                                            th:selected="${selectedCategory != null and selectedCategory.cid == category.cid}">
+                                    </option>
+                                </select>
+                                <select name="priceRange">
+                                    <option value="">Giá</option>
+                                    <option value="under_10m">Dưới 10 triệu</option>
+                                    <option value="10m_to_17m">Từ 10 triệu đến 17 triệu</option>
+                                    <option value="17m_to_25m">Từ 17 triệu đến 25 triệu</option>
+                                    <option value="over_25m">Trên 25 triệu</option>
+                                </select>
+
+                                <button type="submit">Tìm kiếm</button>
+                            </form>
+                        </li>
+                    </ul>
+                    <form class="nav-link" th:action="@{/cart}" method="get">
+                        <input type="hidden" name="cartId" th:value="${cart.id}">
+                        <button type="submit" class="btn btn-outline-dark">
+                            <i class="bi-cart-fill me-1"></i>
+                            Cart
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" th:text="${cart.totalItems}"></span>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </nav>
+
+
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="row gx-4 gx-lg-5 row-cols-1">
+                    <div class="container">
+                        <div class="row">
+                            <!-- Phần danh sách sản phẩm trong giỏ hàng (2/3 chiều rộng) -->
+                            <div class="col-md-8">
+                                <table class="table">
+                                    <tr>
+                                        <th scope="col">Ảnh</th>
+                                        <th scope="col">Tên sản phẩm</th>
+                                        <th scope="col">Giá</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Tổng giá</th>
+                                        <th scope="col">Hành động</th>
+                                    </tr>
+
+                                    <!-- Dữ liệu sản phẩm trong giỏ hàng sẽ được tạo ở đây -->
+                                    <!-- Sử dụng Thymeleaf để lặp qua danh sách sản phẩm trong giỏ hàng -->
+                                    <tr th:each="cartItem : ${cartItems}">
+                                        <td><img class="card-img-top2" th:src="${cartItem.pid.pimage}"></td>
+                                        <td th:text="${cartItem.pid.pname}"></td>
+                                        <td th:text="${cartItem.price}"></td>
+                                        <td>
+                                            <form th:action="@{/cart/updateQuantity}" method="post" class="update-form">
+                                                <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
+                                                <input type="hidden" name="cartId" th:value="${cart.id}">
+                                                <input type="number" class="quantity-input" name="quantity" th:value="${cartItem.quantity}" min="1">
+                                            </form>
+                                        </td>
+                                        <td ><span th:text="${cartItem.totalPrice}" class="total-price"></span><sup >đ</sup></td>
+                                        <td>
+                                            <form th:action="@{/cart/removeItem}" method="post">
+                                                <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
+                                                <input type="hidden" name="cartId" th:value="${cart.id}">
+                                                <button type="submit">Xóa</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <th:block th:if="${cartItems.isEmpty()}">
+                                    <p>Chưa có sản phẩm nào trong giỏ hàng.</p>
+                                </th:block>
+                            </div>
+                            <!-- Phần tổng giá và nút thanh toán (1/3 chiều rộng) -->
+                            <div class="col-md-4">
+                                <div class="summary text-center">
+                                    <th:block th:unless="${cartItems.isEmpty()}">
+                                        <p>
+                                            <strong>Tổng giá trị đơn hàng:</strong>
+                                            <span th:text="${cart.totalPrice}" class="cart-total-price" style="font-size: 20px;color: red;"> </span><sup style="font-size: 20px; color: red;">đ</sup>
+                                        </p>
+                                        <form th:action="@{/checkout}" method="get">
+                                            <input type="hidden" name="cartId" th:value="${cart.id}" />
+                                            <button type="submit">Đặt hàng</button>
+                                        </form>
+                                    </th:block>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <footer class="py-5 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+        </footer>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                window.scrollTo(0, document.body.scrollHeight / 3);
+            });
+        </script>
+    </body>
+    <script>
+        $(document).ready(function () {
+            $('.quantity-input').on('input', function () {
+                var form = $(this).closest('.update-form');
+                var formData = form.serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: formData,
+                    success: function (data) {
+                        if (data.hasOwnProperty('newTotalPrice')) {
+                            var newTotalPrice = data.newTotalPrice;
+                            var row = form.closest('tr');
+                            row.find('.total-price').text(newTotalPrice.toFixed(2));
+
+                            // Cập nhật tổng giá trị đơn hàng
+                            var totalCartPrice = 0;
+                            $('.total-price').each(function () {
+                                totalCartPrice += parseFloat($(this).text());
+                            });
+                            $('.cart-total-price').text(totalCartPrice.toFixed(2));
+                        } else {
+                            console.error('Phản hồi từ máy chủ không chứa thuộc tính newTotalPrice.');
+                        }
+                    },
+                    error: function () {
+                        console.error('Lỗi khi cập nhật sản phẩm');
+                    }
+                });
+            });
+
+            $('.quantity-input').on('keydown', function (e) {
+                if (e.key == 'Enter') {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+    
+
+</html>

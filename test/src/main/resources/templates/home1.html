@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Home</title>
+        <link rel="stylesheet" th:href="@{/css/app.css}">
+    </head>
+    <body>
+        <div th:if="${#httpServletRequest.userPrincipal != null}">
+            Chào mừng <span th:text="${#httpServletRequest.userPrincipal.name}"></span>!
+            <a th:href="@{/logout}">Đăng xuất</a>
+        </div>
+
+        <!-- Hiển thị chức năng đăng nhập nếu chưa đăng nhập -->
+        <div th:unless="${#httpServletRequest.userPrincipal != null}">
+            <a th:href="@{/login}">Đăng nhập</a>
+        </div>
+
+        <h1>Trang chủ</h1>
+
+        <!-- Ô tìm kiếm theo tên sản phẩm -->
+        <form id="searchForm" th:action="@{/home1}" method="get">
+            <input type="text" name="keyword" placeholder="Tìm kiếm theo tên...">
+            <button type="submit">Tìm kiếm</button>
+        </form>
+
+        <!-- Dropdown lọc danh mục -->
+        <form id="categoryForm" th:action="@{/home1}" method="get">
+            <select name="category" onchange="document.getElementById('categoryForm').submit();">
+                <option value="0">Tất cả danh mục</option>
+                <option th:each="category : ${category}" th:value="${category.cid}" th:text="${category.cname}"
+                        th:selected="${selectedCategory != null and selectedCategory.cid == category.cid}">
+                </option>
+            </select>
+        </form>
+
+        <!-- Danh sách sản phẩm -->
+        <div class="product-container">
+            <div th:if="${productPage.empty}">
+                <p>Không có sản phẩm nào.</p>
+            </div>
+            <div class="product-row">
+                <div th:each="product : ${productPage.content}">
+                    <div class="product-item">
+                        <h2 th:text="${product.pname}"></h2>
+                        <a th:href="@{/product(pid=${product.pid})}">
+                            <img class="product-image" th:src="${product.pimage}" alt="Ảnh sản phẩm">
+                        </a>
+                        <p th:text="${product.description}"></p>
+                        <p>Giá: <span th:text="${product.price}"></span></p>
+                    </div>
+                    <form th:action="@{/cart/addItem}" method="post">
+                    <!-- Thêm sản phẩm vào giỏ hàng -->
+                    <input type="hidden" name="productId" th:value="${product.pid}" />
+<!--                    <input type="number" name="quantity" value="1" min="1" max="10" />-->
+                    <input type="submit" value="Thêm vào giỏ hàng" />
+                </form>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div>
+            <!-- Phân trang -->
+            <div>
+                <ul class="pagination">
+                    <!-- Liên kết "Trang trước" -->
+                    <li th:if="${productPage.hasPrevious()}">
+                        <a th:href="@{${'/home1'}(page=${productPage.number - 1})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- Liên kết "Trang đầu" -->
+                    <li th:if="${productPage.number > 3}">
+                        <a th:href="@{${'/home1'}(page=${0})}" th:text="1"></a>
+                        <span>...</span>
+                    </li>
+
+                    <!-- Hiển thị các liên kết trang gần trang hiện tại -->
+                    <li th:each="page : ${productPage.getNumber() > 3 ? #numbers.sequence(productPage.number - 2, productPage.number + 2) : #numbers.sequence(0, 4)}">
+                        <!-- Kiểm tra xem trang còn lại sau khi lọc/tìm kiếm có lớn hơn trang hiện tại không -->
+                        <span th:if="${productPage.getNumber() <= productPage.totalPages - 4}">
+                            <a th:href="@{${'/home1'}(page=${page})}"
+                               th:text="${page + 1}"
+                               th:class="${page == productPage.number ? 'current-page' : ''}"></a>
+                        </span>
+                        <span th:if="${productPage.getNumber() > productPage.totalPages - 4 and page <= productPage.totalPages - 1}">
+                            <a th:href="@{${'/home1'}(page=${page})}"
+                               th:text="${page + 1}"
+                               th:class="${page == productPage.number ? 'current-page' : ''}"></a>
+                        </span>
+                    </li>
+
+                    <!-- Liên kết "Trang cuối" -->
+                    <li th:if="${productPage.getNumber() < productPage.totalPages - 4}">
+                        <span>...</span>
+                        <a th:href="@{${'/home1'}(page=${productPage.totalPages - 1})}" th:text="${productPage.totalPages}"></a>
+                    </li>
+
+                    <!-- Liên kết "Trang sau" -->
+                    <li th:if="${productPage.hasNext()}">
+                        <a th:href="@{${'/home1'}(page=${productPage.number + 1})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+    <script>
+        // Sử dụng JavaScript để gửi yêu cầu khi chọn danh mục trong dropdown
+        document.getElementById("categoryForm").addEventListener("change", function () {
+            this.submit();
+        });
+        // Sử dụng JavaScript để gửi yêu cầu khi nhập từ khóa tìm kiếm và ấn Enter
+        document.getElementById("searchForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const keyword = document.querySelector("input[name='keyword']").value;
+            window.location.href = "/home1?keyword=" + keyword;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Shop Category</title>
+
+        <link th:href="@{/css/bootstrap.min1.css}" type="text/css" rel="stylesheet">
+        <link th:href="@{/css/datepicker3.css}"  type="text/css" rel="stylesheet">
+        <link th:href="@{/css/bootstrap-table1.css}" type="text/css" rel="stylesheet">
+        <link th:href="@{/css/styles1.css}" type="text/css" rel="stylesheet">
+        <style>
+            .date-input {
+                max-width: 150px; /* Điều chỉnh kích thước tối đa của ô nhập liệu */
+                width: 100%;
+            }
+            .highlight-total p {
+                font-size: 18px; /* Điều chỉnh kích thước chữ */
+                color: #dc3545; /* Chọn màu đỏ */
+                font-weight: bold; /* Tăng độ đậm */
+            }
+        </style>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" th:href="@{/admin/category}"><span>Shop</span> Làng lá</a>
+                    <ul class="user-menu">
+                        <li class="dropdown pull-right">
+                            <div class="dropdown-toggle" th:if="${#httpServletRequest.userPrincipal != null}">
+                                Chào mừng <span th:text="${#httpServletRequest.userPrincipal.name}" style="font-size: 20px; color: green;"></span>!
+                                <a th:href="@{/logout}">Đăng xuất</a>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+            <ul class="nav menu">
+                <li><a th:href="@{/admin/category}"><svg class="glyph stroked open folder"><use xlink:href="#stroked-open-folder"/></svg>Quản lý danh mục</a></li>
+                <li ><a th:href="@{/admin/products}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Quản lý sản phẩm</a></li>
+                <li class="active"><a th:href="@{/admin/revenue}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Doanh thu</a></li>
+                <li><a th:href="@{/admin/totalsell}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Thống kê</a></li>
+                <li ><a th:href="@{/admin/order}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Quản lý đơn hàng</a></li>
+            </ul>
+
+        </div><!--/.sidebar-->
+
+        <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+            <div class="row">
+                <ol class="breadcrumb">
+                    <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+                    <li class="active">Thống kê</li>
+                </ol>
+            </div><!--/.row-->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" style="color: green; text-align: center;">Doanh thu</h1>
+                </div>
+            </div><!--/.row-->
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h1>Doanh thu theo ngày tháng</h1>
+
+                            <form action="/admin/revenue" method="get">
+                                <div class="form-group">
+                                    <label for="startdate">Từ ngày:</label>
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control date-input" name="startdate" id="startdate" th:value="${startdate}" placeholder="Chọn ngày" />
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="enddate">Đến ngày:</label>
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control date-input" name="enddate" id="enddate" th:value="${enddate}" placeholder="Chọn ngày" />
+
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Xem doanh thu</button>
+                            </form>
+
+                            <div th:if="${(startdate == null or #strings.isEmpty(startdate)) and (enddate == null or #strings.isEmpty(enddate))}" class="highlight-total">
+                                <p>Tổng doanh thu: <span th:text="${total}"></span></p>
+                            </div>
+
+                            <!--<div th:if="${not ((startdate == null or #strings.isEmpty(startdate)) and (enddate == null or #strings.isEmpty(enddate)))}" class="highlight-total">
+                                <p>Tổng doanh thu: <span th:text="${total}"></span></p>
+                            </div>-->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>	<!--/.main-->
+
+
+    </body>
+
+</html>

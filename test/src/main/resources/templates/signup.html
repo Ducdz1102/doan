@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/reset.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css">
+<!--    <link rel="stylesheet" th:href="@{https://pro.fontawesome.com/releases/v5.10.0/css/all.css}">-->
+    <title>Form login</title>
+</head>
+
+<body>
+    <video autoplay muted loop plays-inline class="myVideo">
+            <source th:src="@{/css/video.mp4}" type="video/mp4">
+        </video>
+    <div id="wrapper">
+        <form th:action="@{/signup}" method="post" id="form-login" th:object="${user}">
+            <h1 class="form-heading">Form đăng Ký</h1>
+            <div class="form-group">
+                <i class="far fa-user"></i>
+                <input type="text" class="form-username" th:field="*{username}" name="username" placeholder="Tên đăng nhập" required>
+            </div>
+            <div class="form-group">
+                <i class="fas fa-key"></i>
+                <input type="password" class="form-password" th:field="*{pass}" name="password" placeholder="Mật khẩu" required>
+                <div id="eye">
+                    <i class="far fa-eye"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <i class="fas fa-key"></i>
+                <input type="text" class="form-password" th:field="*{email}" name="email" placeholder="Email" required>
+                <div id="eye">
+                    <i class="far fa-eye"></i>
+                </div>
+            </div>
+            <button class="form-submit-register" type="submit" id="btn-register">
+                ĐĂNG KÝ
+            </button>
+            
+        </form>
+    </div>
+</body>
+</html>

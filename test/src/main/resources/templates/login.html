@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" th:href="@{/css/reset.css}" type="text/css">
+        <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css">
+        <!--    <link rel="stylesheet" th:href="@{https://pro.fontawesome.com/releases/v5.10.0/css/all.css}">-->
+        <title>Form login</title>
+    </head>
+
+    <body>
+        <video autoplay muted loop plays-inline class="myVideo">
+            <source th:src="@{/css/video.mp4}" type="video/mp4">
+        </video>
+        <div id="wrapper">
+            <form th:action="@{/login}" method="post" id="form-login">
+                <h1 class="form-heading">Form đăng nhập</h1>
+                <div class="form-group">
+                    <i class="far fa-user"></i>
+                    <input type="text" class="form-username" id="username" name="username" placeholder="Tên đăng nhập">
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" class="form-password" id="password" name="password" placeholder="Mật khẩu">
+                    <div id="eye">
+                        <i class="far fa-eye"></i>
+                    </div>
+                </div>
+                <input type="checkbox" id="remember-me" name="remember-me" />
+                <label for="remember-me">Remember me</label>
+                <br />
+                <button class="form-submit-register" type="submit" id="btn-register">
+                    ĐĂNG NHẬP
+                </button>
+                <a th:href="@{/signup}" class="login__registerButton">
+                    Tạo tài khoản mới
+                </a>
+            </form>
+        </div>
+    </body>
+</html>

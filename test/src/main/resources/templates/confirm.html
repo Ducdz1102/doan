@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác nhận đặt hàng</title>
+</head>
+<body>
+    <h1>Xác nhận đặt hàng thành công</h1>
+    <p>Cảm ơn bạn đã đặt hàng. Dưới đây là thông tin đơn hàng của bạn:</p>
+    <p><strong>Tên khách hàng:</strong> <span th:text="${order.customerName}"></span></p>
+    <p><strong>Địa chỉ giao hàng:</strong> <span th:text="${order.shippingAddress}"></span></p>
+    <p><strong>Phương thức thanh toán:</strong> <span th:text="${order.paymentMethod}"></span></p>
+</body>
+</html>

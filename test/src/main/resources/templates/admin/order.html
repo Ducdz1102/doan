@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Shop Admin Product</title>
+
+        <link th:href="@{/css/bootstrap.min1.css}" type="text/css" rel="stylesheet">
+        <link th:href="@{/css/datepicker3.css}"  type="text/css" rel="stylesheet">
+        <link th:href="@{/css/bootstrap-table1.css}" type="text/css" rel="stylesheet">
+        <link th:href="@{/css/styles1.css}" type="text/css" rel="stylesheet">
+
+        <!--Icons-->
+        <script th:src="@{/js/lumino.glyphs.js}"></script>
+
+
+
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" th:href="@{/admin/category}"><span>Shop</span> Làng lá</a>
+                    <ul class="user-menu">
+                        <li class="dropdown pull-right">
+                            <div class="dropdown-toggle" th:if="${#httpServletRequest.userPrincipal != null}">
+                                Chào mừng <span th:text="${#httpServletRequest.userPrincipal.name}" style="font-size: 20px; color: green;"></span>!
+                                <a th:href="@{/logout}">Đăng xuất</a>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+            <ul class="nav menu">
+                <li><a th:href="@{/admin/category}"><svg class="glyph stroked open folder"><use xlink:href="#stroked-open-folder"/></svg>Quản lý danh mục</a></li>
+                <li><a th:href="@{/admin/products}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Quản lý sản phẩm</a></li>
+                <li><a th:href="@{/admin/revenue}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Doanh thu</a></li>
+                <li><a th:href="@{/admin/totalsell}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Thống kê</a></li>
+                <li class="active"><a th:href="@{/admin/order}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Quản lý đơn hàng</a></li>
+            </ul>
+
+        </div><!--/.sidebar-->
+
+        <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+            <div class="row">
+                <ol class="breadcrumb">
+                    <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+                    <li class="active">Danh sách sản phẩm</li>
+                </ol>
+            </div><!--/.row-->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" style="color: blueviolet; text-align: center;">Danh sách sản phẩm</h1>
+                </div>
+            </div><!--/.row-->
+
+            <div class="container px-4 px-lg-5">
+                <div class="row">
+                    <div class="col-lg-4">
+
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                                <li class="nav-item">
+                                    <form id="searchForm" th:action="@{/admin/order}" method="get">
+                                        <input type="text" name="search" placeholder="Nhập ngày or trạng thái">
+                                        <button type="submit" style="background-color: #007bff; color: #fff; border: none; padding: 5px 10px;">Tìm kiếm</button>
+                                    </form>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table 
+                                data-toolbar="#toolbar"
+                                data-toggle="table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th data-field="id" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">ID</th>
+                                        <th data-field="address" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Địa chỉ </th>
+                                        <th data-field="phone" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Điện thoại</th>
+                                        <th data-field="note" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Ghi chú</th>
+                                        <th data-field="createDate" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Ngày đặt hàng</th>
+                                        <th data-field="methodPayment" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Phương thức thanh toán</th>
+                                        <th data-field="methodShipping" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Phương thức giao hàng</th>
+                                        <th data-field="status" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Trạng thái</th>
+                                        <th data-field="totalPrice" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Tổng tiền</th>
+                                        <th data-field="username" data-sortable="true" style="padding: 15px;color: blue; text-align: center;">Người mua</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="pro:${order.content}" style="margin-bottom: 10px;">
+                                        <td th:text="${pro.id}" style="text-align: center;"></td>
+                                        <td th:text="${pro.address}" style="text-align: center;"></td>
+                                        <td span th:text="${pro.phone}" style="text-align: center;"></td>
+                                                                          
+                                        <td th:text="${pro.note}" style="text-align: center;"></td>
+                                        <td th:text="${pro.createDate}" style="text-align: center;"></td>
+                                        <td th:text="${pro.methodPayment}" style="text-align: center;"></td>
+                                        <td th:text="${pro.methodShipping}" style="text-align: center;"></td>
+                                        <td th:text="${pro.status}" style="text-align: center;"></td>
+                                        <td th:text="${pro.totalPrice}" style="text-align: center;"></td>
+                                        <td th:text="${pro.uid.username}" style="text-align: center;"></td>
+                                        <!--                                        <td class="form-group" style="text-align: center;">
+                                                                                    <a th:href="@{/admin/edit_product/{id}(id=${pro.pid})}" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                                                    <a th:href="@{/product/del/{id}(id=${pro.pid})}" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                                                                                </td>-->
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!--                        <div class="pagination">
+                                                    <ul style="display: flex; list-style: none;">
+                                                         Liên kết "Trang trước" 
+                                                        <li th:if="${listProducts.number > 0}" style="margin: 0 5px;">
+                                                            <a th:href="@{'/admin/products?page=' + ${listProducts.number - 1}}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #ccc; background-color: #f0f0f0; color: #007bff;">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </li>
+                        
+                                                         Hiển thị các liên kết trang 
+                                                        <li th:each="i : ${#numbers.sequence(0, listProducts.totalPages - 1)}" style="margin: 0 5px;">
+                                                            <a th:href="@{'/admin/products?page=' + ${i}}" th:class="${i == listProducts.number ? 'current-page' : ''}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #ccc; background-color: #f0f0f0; color: #333;">
+                                                                <span th:text="${i + 1}"></span>
+                                                            </a>
+                                                        </li>
+                        
+                                                         Liên kết "Trang sau" 
+                                                        <li th:if="${listProducts.hasNext()}" style="margin: 0 5px;">
+                                                            <a th:href="@{'/admin/products?page=' + ${listProducts.number + 1}}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #ccc; background-color: #f0f0f0; color: #007bff;">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>-->
+                    </div>
+                </div>
+            </div><!--/.row-->	
+        </div>	<!--/.main-->
+
+
+    </body>
+
+</html>

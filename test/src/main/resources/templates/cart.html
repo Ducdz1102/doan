@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Giỏ hàng</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    </head>
+    <body>
+        <h1>Giỏ hàng</h1>
+        <table class="cart-table" th:if="${not cartItems.isEmpty()}">
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Tổng cộng</th>
+                <th>Hành động</th>
+            </tr>
+            <!-- Lặp qua các sản phẩm trong giỏ hàng và hiển thị chúng trong các dòng -->
+            <tr th:each="cartItem : ${cartItems}">
+                <td th:text="${cartItem.pid.pname}"></td>
+                <td th:text="${cartItem.price}"></td>
+                <td>
+                    <form th:action="@{/cart/updateQuantity}" method="post" class="update-form">
+                        <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
+                        <input type="hidden" name="cartId" th:value="${cart.id}">
+                        <input type="number" class="quantity-input" name="quantity" th:value="${cartItem.quantity}">
+                    </form>
+                </td>
+                <td th:text="${cartItem.totalPrice}" class="total-price"></td>
+                <td>
+                    <!-- Thêm form để xóa sản phẩm khỏi giỏ hàng -->
+                    <form th:action="@{/cart/removeItem}" method="post">
+                        <input type="hidden" name="cartItemId" th:value="${cartItem.id}">
+                        <input type="hidden" name="cartId" th:value="${cart.id}">
+                        <button type="submit">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            
+        </table>
+        <th:block th:unless="${cartItems.isEmpty()}">
+        <p>
+                <strong>Tổng giá trị đơn hàng:</strong>
+                <span th:text="${cart.totalPrice}" class="cart-total-price"> </span><sup>đ</sup>
+            </p>
+            <form th:action="@{/checkout}" method="get">
+                <input type="hidden" name="cartId" th:value="${cart.id}" />
+                <button type="submit">Thanh toán</button>
+            </form>
+    </th:block>
+        
+    <th:block th:if="${cartItems.isEmpty()}">
+        <p>Chưa có sản phẩm nào trong giỏ hàng.</p>
+    </th:block>
+
+</body>
+<script>
+    $(document).ready(function () {
+        $('.quantity-input').on('input', function () {
+            var form = $(this).closest('.update-form');
+            var formData = form.serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: formData,
+                success: function (data) {
+                    if (data.hasOwnProperty('newTotalPrice')) {
+                        var newTotalPrice = data.newTotalPrice;
+                        var row = form.closest('tr');
+                        row.find('.total-price').text(newTotalPrice.toFixed(2));
+
+                        // Cập nhật tổng giá trị đơn hàng
+                        var totalCartPrice = 0;
+                        $('.total-price').each(function () {
+                            totalCartPrice += parseFloat($(this).text());
+                        });
+                        $('.cart-total-price').text(totalCartPrice.toFixed(2));
+                    } else {
+                        console.error('Phản hồi từ máy chủ không chứa thuộc tính newTotalPrice.');
+                    }
+                },
+                error: function () {
+                    console.error('Lỗi khi cập nhật sản phẩm');
+                }
+            });
+        });
+
+        $('.quantity-input').on('keydown', function (e) {
+            if (e.key == 'Enter') {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+
+</html>

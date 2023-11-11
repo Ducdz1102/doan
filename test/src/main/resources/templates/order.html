@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Xác nhận đặt hàng</title>
+    <link th:href="@{css/styles.css}" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#!"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    
+                </ul>
+                <div class="d-flex">
+                    <div class="btn nav-item me-1" th:unless="${#httpServletRequest.userPrincipal != null}">
+                        <a th:href="@{/login}">Đăng nhập</a>
+                    </div>
+                    <div class="btn nav-item me-1" th:if="${#httpServletRequest.userPrincipal != null}">
+                        Chào mừng <span th:text="${#httpServletRequest.userPrincipal.name}" style="font-size: 20px; color: green;"></span>!
+                        <a th:href="@{/logout}">Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Header-->
+    <header class="bg-dark py-5" style="background-image: url('/css/12.jpg')">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Shop in style</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Welcome!!!</p>
+            </div>              
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <p class="navbar-brand" >Start Bootstrap</p>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/home1}">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card p-4">
+                        <form th:action="@{/order/create}" method="post" th:object="${order}" class="row g-3">
+                            <div class="col-md-6">
+                                <label for="customerName" class="form-label">Tên khách hàng:</label>
+                                <span th:text="${#httpServletRequest.userPrincipal.name}" style="font-size: 20px; color: green;" class="form-control-plaintext"></span>
+                                <input type="hidden" th:field="*{uid}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="address" class="form-label">Địa chỉ giao hàng:</label>
+                                <input type="text" th:field="*{address}" required class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Số điện thoại:</label>
+                                <input type="text" th:field="*{phone}" oninput="validateNumber(this)" required class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="methodShipping" class="form-label">Phương thức giao hàng:</label>
+                                <select th:field="*{methodShipping}" class="form-select">
+                                    <option value="standard">Giao hàng tiêu chuẩn</option>
+                                    <option value="express">Giao hàng nhanh</option>
+                                    <option value="pickup">Tự đến lấy hàng</option>
+                                </select>
+                            </div>
+                            <input type="hidden" th:field="*{status}">
+                            <div class="col-12">
+                                <label for="note" class="form-label">Lời nhắn/ghi chú:</label>
+                                <input type="text" th:field="*{note}" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <p>Tổng giá tiền: <span th:text="*{totalPrice} " style="font-size: 24px; color: red;"></span><sup style="font-size: 24px; color: red;">đ</sup></p>
+                                <input type="hidden" th:field="*{totalPrice}" readonly>
+                            </div>
+                            <div class="col-12">
+                                <p class="form-label">Phương thức thanh toán:</p>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="radio" id="onlinePayment" th:field="*{methodPayment}" th:value="online" required>
+                                <label for="onlinePayment">Thanh toán trực tuyến bằng PayPal</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="radio" id="cashOnDelivery" th:field="*{methodPayment}" th:value="cash" required>
+                                <label for="cashOnDelivery">Thanh toán khi nhận hàng</label>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Thanh toán</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function validateNumber(input) {
+            var value = input.value;
+            var validNumber = /^\d+$/.test(value);
+
+            if (!validNumber) {
+                input.value = ""; // Xóa giá trị nếu không phải số
+            }
+        }
+    </script>
+</body>
+</html>

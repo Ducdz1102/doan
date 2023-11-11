@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>     
+    </head>
+    <body>
+        <div th:fragment="header">
+            <header id="header" >
+                <!-- header top -->
+                <div class="header__top">
+                    <div class="container">
+                        <section class="row flex">
+                            <div class="col-lg-5 col-md-0 col-sm-0 heade__top-left">
+                                <span>Shop Quần Áo</span>
+                            </div>
+
+                            <div th:if="${#httpServletRequest.userPrincipal != null}">
+            Chào mừng <span th:text="${#httpServletRequest.userPrincipal.name}"></span>!
+            <a th:href="@{/logout}">Đăng xuất</a>
+        </div>
+
+        <!-- Hiển thị chức năng đăng nhập nếu chưa đăng nhập -->
+        <div th:unless="${#httpServletRequest.userPrincipal != null}">
+            <a th:href="@{/login}">Đăng nhập</a>
+        </div>
+
+        <h1>Trang chủ</h1>
+
+        <!-- Ô tìm kiếm theo tên sản phẩm -->
+        
+                        </section>
+                    </div>
+                </div>
+                <!--end header top -->
+
+                <!-- header bottom -->
+                <div class="header__bottom">
+                    <div class="container">
+                        <section class="row">
+                            <div class="col-lg-3 col-md-4 col-sm-12 header__logo">
+                                <h1 class="header__heading">
+                                    <a th:href="@{/Trangchu}" class="header__logo-link">
+                                        <img th:src="@{/css/meo.jpg}" width="100" height="60" alt="Logo" class="header__logo-img">
+                                    </a>
+                                </h1>
+                            </div>
+
+                            <div class="col-lg-6 col-md-7 col-sm-0 header__search">
+                                <form id="categoryForm" th:action="@{/home1}" method="get" class="header__search-input">
+            <select name="category" onchange="document.getElementById('categoryForm').submit();">
+                <option value="0" class="header__search-input">Tất cả danh mục</option>
+                <option th:each="category : ${category}" th:value="${category.cid}" th:text="${category.cname} " class="header__search-input"
+                        th:selected="${selectedCategory != null and selectedCategory.cid == category.cid}">
+                </option>
+            </select>
+        </form>
+                                
+                                <form id="searchForm" th:action="@{/home1}" method="get" class="header__search-input">
+            <input type="text" name="keyword" class="header__search-input" placeholder="Tìm kiếm tại đây...">
+            <button type="submit">Tìm kiếm</button>
+        </form>
+
+                            </div>
+                            <a th:href="@{/Cart}" class="col-lg-1 col-md-1 col-sm-0 header__cart">
+                                <div class="header__cart-icon-wrap">
+                                    <span class="header__notice">4</span>
+                                    <i class="fas fa-shopping-cart header__nav-cart-icon"></i>
+                                </div>
+                            </a>
+                        </section>
+                    </div>   
+                </div>
+                <!--end header bottom -->
+
+                <!-- header nav -->
+                <div class="header__nav">
+                    <div class="container">
+                        <section class="row">
+                            <div class="header__nav-menu-wrap col-lg-3 col-md-0 col-sm-0">
+                                <i class="header__nav-menu-icon"></i>
+                                <div class="header__nav-menu-title">Danh mục sản phẩm</div>
+                            </div>
+                            <div class="header__nav col-lg-9 col-md-0 col-sm-0">
+
+                                <ul class="header__nav-list" >
+                                    <li class="header__nav-item" th:each="cate:${Cate}">
+                                        <a th:href="@{/Trangchu/category/{cid}(cid=${cate.cid})}" class="header__nav-link" th:text="${cate.cname}"></a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                            <div class="header__nav col-lg-9 col-md-0 col-sm-0">
+                                <ul class="header__nav-list">
+                                    <ul class="header__nav-list">
+                                        <!--                                <li class="header__nav-item" th:each="cate:${Cate}">
+                                                                            <a th:href="@{/{cid}(cid=${cate.cid}" class="header__nav-link" th:text="${cate.cname}"></a>
+                                                                        </li>-->
+
+                                    </ul>
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div th:fragment="footer">
+            <footer >
+                <section class="footer__top">
+                    <div class="container">
+                        <div class="row">
+                            <article class="footer__top-intro col-lg-5 col-md-4 col-sm-6">
+                                <h4 class="footer__top-intro-heading">
+                                    Về chúng tôi
+                                </h4>
+                                <div class="footer__top-intro-content">
+                                    Điện thoại: 0352 860 701 <br>
+                                    Email: doan@gmail.com <br>
+                                    Zalo:  012.345.6789 <br>
+                                </div>
+                            </article>
+
+                            <article class="footer__top-policy col-lg-3 col-md-4 col-sm-6">
+                                <h4 class="footer__top-policy-heading">
+                                    Chính sách mua hàng
+                                </h4>
+
+                                <ul class="footer__top-policy-list">
+                                    <li class="footer__top-policy-item">
+                                        <a href="#" class="footer__top-policy-link">Hình thức đặt hàng</a>
+                                    </li>
+                                    <li class="footer__top-policy-item">
+                                        <a href="#" class="footer__top-policy-link">Hình thức thanh toán</a>
+                                    </li>
+
+                                </ul>
+                            </article>
+
+                            <article class="footer__top-contact-wrap col-lg-4 col-md-4 col-sm-6">
+                                <h4 class="footer__top-contact-heading">
+                                    Hotline liên hệ
+                                </h4>
+
+                                <div class="footer__top-contact">
+                                    <div class="footer__top-contact-icon">
+                                        <img src="images/phone_top.png" class="footer__top-contact-img">
+                                    </div>
+
+                                    <div class="footer__top-contact-phone-wrap">
+                                        <div class="footer__top-contact-phone">
+                                            039.882.3232
+                                        </div>
+                                        <div class="footer__top-contact-des">
+                                            (Giải đáp thắc mắc 24/24)
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+            </footer>
+        </div>
+    </body>
+</html>

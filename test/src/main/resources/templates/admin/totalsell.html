@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Shop Category</title>
+
+        <link th:href="@{/css/bootstrap.min1.css}" type="text/css" rel="stylesheet">
+        <link th:href="@{/css/datepicker3.css}"  type="text/css" rel="stylesheet">
+        <link th:href="@{/css/bootstrap-table1.css}" type="text/css" rel="stylesheet">
+        <link th:href="@{/css/styles1.css}" type="text/css" rel="stylesheet">
+        <style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        color: blue; /* Blue text color for header cells */
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+</style>
+
+    </head>
+
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" th:href="@{/admin/category}"><span>Shop</span> Làng lá</a>
+                    <ul class="user-menu">
+                        <li class="dropdown pull-right">
+                            <div class="dropdown-toggle" th:if="${#httpServletRequest.userPrincipal != null}">
+                                Chào mừng <span th:text="${#httpServletRequest.userPrincipal.name}" style="font-size: 20px; color: green;"></span>!
+                                <a th:href="@{/logout}">Đăng xuất</a>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+            <ul class="nav menu">
+                <li ><a th:href="@{/admin/category}"><svg class="glyph stroked open folder"><use xlink:href="#stroked-open-folder"/></svg>Quản lý danh mục</a></li>
+                <li><a th:href="@{/admin/products}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Quản lý sản phẩm</a></li>
+                <li><a th:href="@{/admin/revenue}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Doanh thu</a></li>
+                <li class="active"><a th:href="@{/admin/totalsell}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Thống kê</a></li>
+                <li ><a th:href="@{/admin/order}"><svg class="glyph stroked bag"><use xlink:href="#stroked-bag"></use></svg>Quản lý đơn hàng</a></li>
+            </ul>
+
+        </div><!--/.sidebar-->
+
+        <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+            <div class="row">
+                <ol class="breadcrumb">
+                    <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+                    <li class="active">Thống kê</li>
+                </ol>
+            </div><!--/.row-->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" style="color: yellow; text-align: center;">Sản phẩm bán chạy</h1>
+                </div>
+            </div><!--/.row-->
+            <div class="container px-4 px-lg-5">
+                <div class="row">
+                    
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th> ID</th>
+                                        <th> Name</th>
+                                        <th>Total Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Thêm vòng lặp để lặp qua các phần tử trong trang -->
+                                <th:block th:each="item : ${page.content}">
+                                    <tr>
+                                        <td th:text="${item.pid}"></td>
+                                        <td th:text="${item.pname}"></td>
+                                        <td th:text="${item.totalquantity}"></td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                         <div class="pagination">
+                            <ul style="display: flex; list-style: none;">
+                                <!-- Liên kết "Trang trước" -->
+                                <li th:if="${page.number > 0}" style="margin: 0 5px;">
+                                    <a th:href="@{'/admin/totalsell?page=' + ${page.number - 1}}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #ccc; background-color: #f0f0f0; color: #007bff;">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+
+                                <!-- Hiển thị các liên kết trang -->
+                                <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" style="margin: 0 5px;">
+                                    <a th:href="@{'/admin/totalsell?page=' + ${i}}" th:class="${i == page.number ? 'current-page' : ''}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #ccc; background-color: #f0f0f0; color: #333;">
+                                        <span th:text="${i + 1}"></span>
+                                    </a>
+                                </li>
+
+                                <!-- Liên kết "Trang sau" -->
+                                <li th:if="${page.hasNext()}" style="margin: 0 5px;">
+                                    <a th:href="@{'/admin/totalsell?page=' + ${page.number + 1}}" style="text-decoration: none; padding: 5px 10px; border: 1px solid #ccc; background-color: #f0f0f0; color: #007bff;">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div><!--/.row-->
+        </div>	<!--/.main-->
+
+
+    </body>
+
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Thiết lập tiêu đề và CSS -->
+</head>
+<body>
+    <h1>Verify Email</h1>
+    <form th:action="@{/verify}" method="post">
+        <input type="text" name="verificationCode" required>
+        <button type="submit">Verify</button>
+    </form>
+</body>
+</html>

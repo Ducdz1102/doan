@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Doanh thu</title>
+    </head>
+    <body>
+        <h1>Doanh thu theo ngày tháng</h1>
+        <form action="/revenue" method="get">
+            <label for="createdate">Từ ngày:</label>
+            <input type="text" name="startdate" id="startdate" th:value="${startdate}" />
+            <br>
+            <label for="enddate">Đến ngày:</label>
+            <input type="text" name="enddate" id="enddate" th:value="${enddate}" />
+            <br>
+            <button type="submit">Xem doanh thu</button>
+        </form>
+       <div th:if="${#strings.isEmpty(createdate) &amp;&amp; #strings.isEmpty(enddate)}">
+    <p>Tổng doanh thu tháng này: <span th:text="${total}"></span></p>
+</div>
+<div th:unless="${#strings.isEmpty(createdate) &amp;&amp; #strings.isEmpty(enddate)}">
+    <p>Tổng doanh thu: <span th:text="${total}"></span></p>
+</div>
+
+
+
+    </body>
+</html>
